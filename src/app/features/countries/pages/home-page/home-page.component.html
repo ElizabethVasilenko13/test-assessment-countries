@@ -13,7 +13,7 @@
           <li
             *ngFor="
               let country of countriesList
-                | countryFilter: countriesForm.get('country')?.value ?? '';
+                | filterByPipe: 'name' : countriesForm.get('country')?.value ?? '';
               trackBy: trackByCountryCode
             "
           >
@@ -29,7 +29,7 @@
         [countryName]="holiday.countryName"
         [holidayName]="holiday.name"
         [holidaydate]="holiday.date"
-        [routePath]="holiday.countryCode" 
+        [routePath]="holiday.countryCode"
       ></app-country-card>
     </section>
   </div>

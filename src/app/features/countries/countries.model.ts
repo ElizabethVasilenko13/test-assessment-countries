@@ -1,9 +1,9 @@
-export interface CountryShort {
+export interface CountryShortInfo {
   countryCode: string;
   name: string;
 }
 
-export interface CountryNextHolidayResponse {
+export interface CountryHolidayResponse {
   date: Date;
   localName: string;
   name: string;
@@ -14,6 +14,14 @@ export interface CountryNextHolidayResponse {
   types: ['Public'];
 }
 
-export interface CountryNextHolidayProps extends CountryNextHolidayResponse {
+export interface CountryNextHolidayProps extends CountryHolidayResponse {
   countryName: string;
+}
+
+export interface CountryFullInfo {
+  commonName: string;
+  officialName: string;
+  countryCode: string;
+  region: string;
+  borders: [string];
 }

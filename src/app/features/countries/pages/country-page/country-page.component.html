@@ -1,1 +1,27 @@
-<p>country-page works!</p>
+<main class="country-page">
+  <h1>Holidays in {{ countryData?.commonName }} for {{ selectedYear }}</h1>
+
+  <div class="year-switcher">
+    <button
+      mat-button
+      *ngFor="let year of availableYears"
+      [class.active]="year === selectedYear"
+      (click)="onYearChange(year)"
+    >
+      {{ year }}
+    </button>
+  </div>
+
+  <div class="holidays-list" *ngIf="countryHolidays.length > 0">
+    <ul>
+      <li *ngFor="let holiday of countryHolidays">
+        <h3>{{ holiday.name }}</h3>
+        <p>Date: {{ holiday.date | date: 'fullDate' }}</p>
+        <p>Type: {{ holiday.types.join(', ') }}</p>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="countryHolidays.length === 0">
+    <p>No holidays available for the selected year.</p>
+  </div>
+</main>
