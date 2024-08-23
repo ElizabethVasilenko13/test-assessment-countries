@@ -63,4 +63,8 @@ export class CountryPageComponent implements OnInit {
     this.selectedYear = year;
     this.fetchCountryHolidays(year, this.countryCode);
   }
+
+  trackByHoliday(index: number): number {
+    return index;
+  }
 }

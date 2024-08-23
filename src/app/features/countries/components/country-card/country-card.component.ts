@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   templateUrl: './country-card.component.html',
   styleUrl: './country-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountryCardComponent {
   @Input() countryName = 'Unknown Country';
