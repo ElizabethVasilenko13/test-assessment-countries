@@ -1,0 +1,29 @@
+<main>
+  <div class="main-container">
+    <section class="country-search">
+      <h2>Country Search</h2>
+      <form [formGroup]="countriesForm">
+        <mat-form-field class="form-field">
+          <mat-label>Country</mat-label>
+          <input matInput formControlName="country" placeholder="Enter country name" />
+        </mat-form-field>
+      </form>
+      <div class="country-list">
+        <ul>
+          <li
+            *ngFor="
+              let country of countriesList
+                | countryFilter: countriesForm.get('country')?.value ?? '';
+              trackBy: trackByCountryCode
+            "
+          >
+            <a [routerLink]="[country.countryCode]"> {{ country.name }} </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section class="random-countries">
+      <h2>Random Countries Holidays</h2>
+    </section>
+  </div>
+</main>
