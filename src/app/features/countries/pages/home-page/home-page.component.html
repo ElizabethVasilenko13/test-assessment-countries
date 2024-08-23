@@ -24,6 +24,13 @@
     </section>
     <section class="random-countries">
       <h2>Random Countries Holidays</h2>
+      <app-country-card
+        *ngFor="let holiday of randomCountriesHolidays"
+        [countryName]="holiday.countryName"
+        [holidayName]="holiday.name"
+        [holidaydate]="holiday.date"
+        [routePath]="holiday.countryCode" 
+      ></app-country-card>
     </section>
   </div>
 </main>

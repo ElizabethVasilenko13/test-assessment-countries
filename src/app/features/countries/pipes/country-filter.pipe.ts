@@ -7,8 +7,6 @@ import { CountryShort } from '../countries.model';
 })
 export class CountryFilterPipe implements PipeTransform {
   transform(countries: CountryShort[], searchTerm: string): CountryShort[] {
-    console.log(countries);
-
     if (!countries || !searchTerm) {
       return countries;
     }
