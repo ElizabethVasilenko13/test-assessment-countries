@@ -1,16 +1,16 @@
 <main>
-  <div class="main-container">
-    <section class="country-search">
-      <h2>Country Search</h2>
-      <form [formGroup]="countriesForm">
-        <mat-form-field class="form-field">
-          <mat-label>Country</mat-label>
-          <input matInput formControlName="country" placeholder="Enter country name" />
-        </mat-form-field>
-      </form>
-      @if (isCountriesLoading) {
-        <app-progress-spiner />
-      } @else {
+  @if (isCountriesLoading) {
+    <app-progress-spiner />
+  } @else {
+    <div class="main-container">
+      <section class="country-search">
+        <h2>Country Search</h2>
+        <form [formGroup]="countriesForm">
+          <mat-form-field class="form-field">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" placeholder="Enter country name" />
+          </mat-form-field>
+        </form>
         <div class="country-list">
           <ul>
             @for (
@@ -26,13 +26,9 @@
             }
           </ul>
         </div>
-      }
-    </section>
-    <section class="random-countries">
-      <h2>Random Countries Holidays</h2>
-      @if (isCountriesHolidayLoading) {
-        <app-progress-spiner />
-      } @else {
+      </section>
+      <section class="random-countries">
+        <h2>Random Countries Holiday</h2>
         @for (holiday of randomCountriesHolidays; track holiday.countryCode) {
           <app-country-card
             [countryName]="holiday.countryName"
@@ -43,7 +39,7 @@
         } @empty {
           <div>Sorry, no countries data.</div>
         }
-      }
-    </section>
-  </div>
+      </section>
+    </div>
+  }
 </main>

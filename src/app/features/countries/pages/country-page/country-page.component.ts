@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CountryHolidayResponse, CountryFullInfo } from '@features/countries/countries.model';
 import { CountriesApiService } from '@features/countries/services/countries-api.service';
 import { ProgressSpinerComponent } from '@shared/components/progress-spiner/progress-spiner.component';
+import { generateRange } from '@shared/services/array-transforms';
 import { SnackBarService } from '@shared/services/snack-bar.service';
 import { finalize, take } from 'rxjs';
 
@@ -44,7 +45,7 @@ export class CountryPageComponent implements OnInit {
   initYears(): void {
     const startYear = 2020;
     const endYear = 2030;
-    this.availableYears = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
+    this.availableYears = generateRange(startYear, endYear);
   }
 
   fetchCountryData(countryCode: string): void {
@@ -52,9 +53,9 @@ export class CountryPageComponent implements OnInit {
       .getCountryInfo(countryCode)
       .pipe(take(1))
       .subscribe({
-        next: data => {
-          this.countryData = data;
-          this.titleService.setTitle(this.countryData.commonName || 'Country');
+        next: countryData => {
+          this.countryData = countryData;
+          this.titleService.setTitle(countryData.commonName || 'Country');
           this.snackBarService.showSnackbar('Country data loaded successfully!');
         },
         error: () => {
@@ -74,8 +75,8 @@ export class CountryPageComponent implements OnInit {
         })
       )
       .subscribe({
-        next: data => {
-          this.countryHolidays = data;
+        next: countryHolidaysData => {
+          this.countryHolidays = countryHolidaysData;
           this.snackBarService.showSnackbar(`Holidays for ${year} loaded successfully!`);
         },
         error: () => {

@@ -19,7 +19,6 @@ I've created .env file for storing base api url and put it into .gitignore as it
 - **Snackbar Notifications**: Provides feedback to users about the success or failure of operations.
 - **Interceptor**: API URL interceptor for handling API requests.
 
-
 ### Architecture
 
 The application is organized into two main parts:
@@ -58,6 +57,7 @@ The application is organized into two main parts:
    ```
 
 5. **Run the application:**
+
    ```
    ng serve
    ```
@@ -68,7 +68,7 @@ The application is organized into two main parts:
    ```
 
 ### Screenshots
+
 ![image](https://github.com/user-attachments/assets/66848aa7-0b5b-40a5-85f1-c9dfb520650b)
 
 ![image](https://github.com/user-attachments/assets/818225da-592c-4ce4-9991-6f35f893906e)
-
