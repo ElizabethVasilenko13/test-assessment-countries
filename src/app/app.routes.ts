@@ -6,5 +6,4 @@ import { HomePageComponent } from './features/countries/pages/home-page/home-pag
 export const routes: Routes = [
   { path: AppRoutes.MAIN_PAGE_ROUTE, title: 'Home', component: HomePageComponent },
   { path: AppRoutes.COUNTRY_PAGE_ROUTE, title: 'Home', component: CountryPageComponent },
-  // { path: '**', component: PageNotFoundComponent },
 ];
