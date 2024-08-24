@@ -14,7 +14,7 @@
 
   <div class="holidays-list" *ngIf="countryHolidays.length > 0">
     <ul>
-      <li *ngFor="let holiday of countryHolidays; trackBy trackByHoliday">
+      <li *ngFor="let holiday of countryHolidays; trackBy: trackByHoliday">
         <h3>{{ holiday.name }}</h3>
         <p>Date: {{ holiday.date | date: 'fullDate' }}</p>
         <p>Type: {{ holiday.types.join(', ') }}</p>

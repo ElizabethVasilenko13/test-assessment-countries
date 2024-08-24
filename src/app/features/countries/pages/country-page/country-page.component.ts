@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { CountryHolidayResponse, CountryFullInfo } from '@features/countries/countries.model';
+import { CountriesApiService } from '@features/countries/services/countries-api.service';
 import { take } from 'rxjs';
 
 @Component({
@@ -15,7 +16,8 @@ import { take } from 'rxjs';
 })
 export class CountryPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  private http = inject(HttpClient);
+  private titleService = inject(Title);
+  private countryApiService = inject(CountriesApiService);
 
   selectedYear = new Date().getFullYear();
   availableYears: number[] = [];
@@ -42,17 +44,18 @@ export class CountryPageComponent implements OnInit {
   }
 
   fetchCountryData(countryCode: string): void {
-    this.http
-      .get<CountryFullInfo>(`CountryInfo/${countryCode}`)
+    this.countryApiService
+      .getCountryInfo(countryCode)
       .pipe(take(1))
       .subscribe(data => {
         this.countryData = data;
+        this.titleService.setTitle(this.countryData.commonName || 'Country');
       });
   }
 
   fetchCountryHolidays(year: number, countryCode: string): void {
-    this.http
-      .get<CountryHolidayResponse[]>(`PublicHolidays/${year}/${countryCode}`)
+    this.countryApiService
+      .getCountryHolidays(year, countryCode)
       .pipe(take(1))
       .subscribe(data => {
         this.countryHolidays = data;

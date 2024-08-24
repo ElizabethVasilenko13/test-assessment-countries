@@ -1,18 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { CountryCardComponent } from '@features/countries/components/country-card/country-card.component';
-import {
-  CountryNextHolidayProps,
-  CountryHolidayResponse,
-  CountryShortInfo,
-} from '@features/countries/countries.model';
+import { CountryNextHolidayProps, CountryShortInfo } from '@features/countries/countries.model';
+import { CountriesApiService } from '@features/countries/services/countries-api.service';
 import { FilterByPipe } from '@shared/pipes/filter-by-filed.pipe';
-import { getRandomElements } from '@shared/services/get-rundom-els';
+import { getRandomElements } from '@shared/services/get-rundom-items';
 import { take } from 'rxjs';
 
 @Component({
@@ -33,7 +29,7 @@ import { take } from 'rxjs';
 })
 export class HomePageComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
+  private countryApiService = inject(CountriesApiService);
 
   countriesList: CountryShortInfo[] = [];
   randomCountriesHolidays: CountryNextHolidayProps[] = [];
@@ -46,8 +42,8 @@ export class HomePageComponent implements OnInit {
   }
 
   fetchCountries(): void {
-    this.http
-      .get<CountryShortInfo[]>('AvailableCountries')
+    this.countryApiService
+      .getCountries()
       .pipe(take(1))
       .subscribe(data => {
         this.countriesList = data;
@@ -61,11 +57,11 @@ export class HomePageComponent implements OnInit {
 
   fetchRandomCountriesHolidays(countriesList: CountryShortInfo[]): void {
     const rundomCountriesAmount = 3;
-    const randomCountryCodes = getRandomElements(countriesList, rundomCountriesAmount);
+    const randomCountries = getRandomElements(countriesList, rundomCountriesAmount);
 
-    randomCountryCodes.forEach(country => {
-      this.http
-        .get<CountryHolidayResponse[]>(`NextPublicHolidays/${country.countryCode}`)
+    randomCountries.forEach(country => {
+      this.countryApiService
+        .getNextPublicHolidays(country.countryCode)
         .pipe(take(1))
         .subscribe(holidays => {
           const nearestNextHoliday = holidays[0];
