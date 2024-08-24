@@ -1,0 +1,54 @@
+main {
+  text-align: center;
+  margin: 20px auto;
+  h1 {
+    color: #ba005c;
+  }
+  .year-switcher {
+    margin-bottom: 20px;
+
+    button {
+      margin: 0 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      background: #e9e3e3;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &.active {
+        background: #ba005c;
+        color: white;
+      }
+
+      &:hover {
+        background: #e0e0e0;
+      }
+    }
+  }
+
+  .holidays-list {
+    ul {
+      list-style-type: none;
+      padding: 0;
+      text-align: left;
+
+      li {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 20px;
+        border: 1px solid #e1c5c5;
+
+        h3 {
+          color: #ba005c;
+          margin: 0;
+          font-size: 20px;
+        }
+
+        p {
+          margin: 5px 0;
+        }
+      }
+    }
+  }
+}

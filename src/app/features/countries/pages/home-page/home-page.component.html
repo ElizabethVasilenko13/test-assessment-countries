@@ -1,0 +1,45 @@
+<main>
+  @if (isCountriesLoading) {
+    <app-progress-spiner />
+  } @else {
+    <div class="main-container">
+      <section class="country-search">
+        <h2>Country Search</h2>
+        <form [formGroup]="countriesForm">
+          <mat-form-field class="form-field">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" placeholder="Enter country name" />
+          </mat-form-field>
+        </form>
+        <div class="country-list">
+          <ul>
+            @for (
+              country of countriesList
+                | filterByPipe: 'name' : countriesForm.get('country')?.value ?? '';
+              track country.countryCode
+            ) {
+              <li>
+                <a [routerLink]="[country.countryCode]"> {{ country.name }} </a>
+              </li>
+            } @empty {
+              <div>Sorry, no countries data.</div>
+            }
+          </ul>
+        </div>
+      </section>
+      <section class="random-countries">
+        <h2>Random Countries Holiday</h2>
+        @for (holiday of randomCountriesHolidays; track holiday.countryCode) {
+          <app-country-card
+            [countryName]="holiday.countryName"
+            [holidayName]="holiday.name"
+            [holidaydate]="holiday.date"
+            [routePath]="holiday.countryCode"
+          ></app-country-card>
+        } @empty {
+          <div>Sorry, no countries data.</div>
+        }
+      </section>
+    </div>
+  }
+</main>
