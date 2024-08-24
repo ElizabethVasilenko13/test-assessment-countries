@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { CountryHolidayResponse, CountryFullInfo } from '@features/countries/countries.model';
 import { CountriesApiService } from '@features/countries/services/countries-api.service';
+import { SnackBarService } from '@shared/services/snack-bar.service';
 import { take } from 'rxjs';
 
 @Component({
@@ -18,6 +19,7 @@ export class CountryPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private titleService = inject(Title);
   private countryApiService = inject(CountriesApiService);
+  protected snackBarService = inject(SnackBarService);
 
   selectedYear = new Date().getFullYear();
   availableYears: number[] = [];
@@ -47,9 +49,15 @@ export class CountryPageComponent implements OnInit {
     this.countryApiService
       .getCountryInfo(countryCode)
       .pipe(take(1))
-      .subscribe(data => {
-        this.countryData = data;
-        this.titleService.setTitle(this.countryData.commonName || 'Country');
+      .subscribe({
+        next: data => {
+          this.countryData = data;
+          this.titleService.setTitle(this.countryData.commonName || 'Country');
+          this.snackBarService.showSnackbar('Country data loaded successfully!');
+        },
+        error: () => {
+          this.snackBarService.showSnackbar('Failed to load country data.', false);
+        },
       });
   }
 
@@ -57,8 +65,14 @@ export class CountryPageComponent implements OnInit {
     this.countryApiService
       .getCountryHolidays(year, countryCode)
       .pipe(take(1))
-      .subscribe(data => {
-        this.countryHolidays = data;
+      .subscribe({
+        next: data => {
+          this.countryHolidays = data;
+          this.snackBarService.showSnackbar(`Holidays for ${year} loaded successfully!`);
+        },
+        error: () => {
+          this.snackBarService.showSnackbar(`Failed to load holidays for ${year}.`, false);
+        },
       });
   }
 

@@ -1,0 +1,18 @@
+.snack-bar-container {
+  display: flex;
+  justify-content: space-between;
+
+  .snack-bar {
+    color: red;
+  }
+
+  &.success .snack-bar {
+    color: rgb(16, 234, 16);
+  }
+}
+
+button {
+  background-color: transparent;
+  color: pink;
+  border: none;
+}

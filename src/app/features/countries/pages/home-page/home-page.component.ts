@@ -9,6 +9,7 @@ import { CountryNextHolidayProps, CountryShortInfo } from '@features/countries/c
 import { CountriesApiService } from '@features/countries/services/countries-api.service';
 import { FilterByPipe } from '@shared/pipes/filter-by-filed.pipe';
 import { getRandomElements } from '@shared/services/get-rundom-items';
+import { SnackBarService } from '@shared/services/snack-bar.service';
 import { take } from 'rxjs';
 
 @Component({
@@ -30,6 +31,7 @@ import { take } from 'rxjs';
 export class HomePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private countryApiService = inject(CountriesApiService);
+  protected snackBarService = inject(SnackBarService);
 
   countriesList: CountryShortInfo[] = [];
   randomCountriesHolidays: CountryNextHolidayProps[] = [];
@@ -45,9 +47,15 @@ export class HomePageComponent implements OnInit {
     this.countryApiService
       .getCountries()
       .pipe(take(1))
-      .subscribe(data => {
-        this.countriesList = data;
-        this.fetchRandomCountriesHolidays(data);
+      .subscribe({
+        next: data => {
+          this.countriesList = data;
+          this.snackBarService.showSnackbar('Countries loaded successfully!');
+          this.fetchRandomCountriesHolidays(data);
+        },
+        error: () => {
+          this.snackBarService.showSnackbar('Failed to load countries.', false);
+        },
       });
   }
 
@@ -63,12 +71,20 @@ export class HomePageComponent implements OnInit {
       this.countryApiService
         .getNextPublicHolidays(country.countryCode)
         .pipe(take(1))
-        .subscribe(holidays => {
-          const nearestNextHoliday = holidays[0];
-          this.randomCountriesHolidays.push({
-            ...nearestNextHoliday,
-            countryName: country.name,
-          });
+        .subscribe({
+          next: holidays => {
+            const nearestNextHoliday = holidays[0];
+            this.randomCountriesHolidays.push({
+              ...nearestNextHoliday,
+              countryName: country.name,
+            });
+          },
+          error: () => {
+            this.snackBarService.showSnackbar(
+              `Failed to load holidays for ${country.name}.`,
+              false
+            );
+          },
         });
     });
   }
