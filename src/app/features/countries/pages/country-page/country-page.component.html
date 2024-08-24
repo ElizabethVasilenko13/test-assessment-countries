@@ -7,17 +7,21 @@
       </button>
     }
   </div>
-  <div class="holidays-list">
-    <ul>
-      @for (holiday of countryHolidays; track $index) {
-        <li>
-          <h3>{{ holiday.name }}</h3>
-          <p>Date: {{ holiday.date | date: 'fullDate' }}</p>
-          <p>Type: {{ holiday.types.join(', ') }}</p>
-        </li>
-      } @empty {
-        <p>No holidays available for the selected year.</p>
-      }
-    </ul>
-  </div>
+  @if (isCountryHolidaysLoading) {
+    <app-progress-spiner />
+  } @else {
+    <div class="holidays-list">
+      <ul>
+        @for (holiday of countryHolidays; track $index) {
+          <li>
+            <h3>{{ holiday.name }}</h3>
+            <p>Date: {{ holiday.date | date: 'fullDate' }}</p>
+            <p>Type: {{ holiday.types.join(', ') }}</p>
+          </li>
+        } @empty {
+          <p>No holidays available for the selected year.</p>
+        }
+      </ul>
+    </div>
+  }
 </main>

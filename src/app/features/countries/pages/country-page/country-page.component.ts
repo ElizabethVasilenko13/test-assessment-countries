@@ -5,13 +5,14 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { CountryHolidayResponse, CountryFullInfo } from '@features/countries/countries.model';
 import { CountriesApiService } from '@features/countries/services/countries-api.service';
+import { ProgressSpinerComponent } from '@shared/components/progress-spiner/progress-spiner.component';
 import { SnackBarService } from '@shared/services/snack-bar.service';
-import { take } from 'rxjs';
+import { finalize, take } from 'rxjs';
 
 @Component({
   selector: 'app-country-page',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, ProgressSpinerComponent],
   templateUrl: './country-page.component.html',
   styleUrl: './country-page.component.scss',
 })
@@ -25,6 +26,7 @@ export class CountryPageComponent implements OnInit {
   availableYears: number[] = [];
   countryData: CountryFullInfo | null = null;
   countryHolidays: CountryHolidayResponse[] = [];
+  isCountryHolidaysLoading = false;
 
   countryCode: string;
 
@@ -62,9 +64,15 @@ export class CountryPageComponent implements OnInit {
   }
 
   fetchCountryHolidays(year: number, countryCode: string): void {
+    this.isCountryHolidaysLoading = true;
     this.countryApiService
       .getCountryHolidays(year, countryCode)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.isCountryHolidaysLoading = false;
+        })
+      )
       .subscribe({
         next: data => {
           this.countryHolidays = data;

@@ -7,10 +7,11 @@ import { RouterModule } from '@angular/router';
 import { CountryCardComponent } from '@features/countries/components/country-card/country-card.component';
 import { CountryNextHolidayProps, CountryShortInfo } from '@features/countries/countries.model';
 import { CountriesApiService } from '@features/countries/services/countries-api.service';
+import { ProgressSpinerComponent } from '@shared/components/progress-spiner/progress-spiner.component';
 import { FilterByPipe } from '@shared/pipes/filter-by-filed.pipe';
 import { getRandomElements } from '@shared/services/get-rundom-items';
 import { SnackBarService } from '@shared/services/snack-bar.service';
-import { take } from 'rxjs';
+import { finalize, take } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -24,6 +25,7 @@ import { take } from 'rxjs';
     FilterByPipe,
     RouterModule,
     CountryCardComponent,
+    ProgressSpinerComponent,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
@@ -39,14 +41,24 @@ export class HomePageComponent implements OnInit {
     country: '',
   });
 
+  isCountriesLoading = false;
+  isCountriesHolidayLoading = false;
+
   ngOnInit(): void {
     this.fetchCountries();
   }
 
   fetchCountries(): void {
+    this.isCountriesLoading = true;
+    this.isCountriesHolidayLoading = true;
     this.countryApiService
       .getCountries()
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.isCountriesLoading = false;
+        })
+      )
       .subscribe({
         next: data => {
           this.countriesList = data;
@@ -62,6 +74,8 @@ export class HomePageComponent implements OnInit {
   fetchRandomCountriesHolidays(countriesList: CountryShortInfo[]): void {
     const rundomCountriesAmount = 3;
     const randomCountries = getRandomElements(countriesList, rundomCountriesAmount);
+
+    let remainingRequests = randomCountries.length;
 
     randomCountries.forEach(country => {
       this.countryApiService
@@ -80,6 +94,12 @@ export class HomePageComponent implements OnInit {
               `Failed to load holidays for ${country.name}.`,
               false
             );
+          },
+          complete: () => {
+            remainingRequests--;
+            if (remainingRequests === 0) {
+              this.isCountriesHolidayLoading = false;
+            }
           },
         });
     });

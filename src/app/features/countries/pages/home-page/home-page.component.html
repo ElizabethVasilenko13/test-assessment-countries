@@ -8,33 +8,41 @@
           <input matInput formControlName="country" placeholder="Enter country name" />
         </mat-form-field>
       </form>
-      <div class="country-list">
-        <ul>
-          @for (
-            country of countriesList
-              | filterByPipe: 'name' : countriesForm.get('country')?.value ?? '';
-            track country.countryCode
-          ) {
-            <li>
-              <a [routerLink]="[country.countryCode]"> {{ country.name }} </a>
-            </li>
-          } @empty {
-            <div>Sorry, no countries data.</div>
-          }
-        </ul>
-      </div>
+      @if (isCountriesLoading) {
+        <app-progress-spiner />
+      } @else {
+        <div class="country-list">
+          <ul>
+            @for (
+              country of countriesList
+                | filterByPipe: 'name' : countriesForm.get('country')?.value ?? '';
+              track country.countryCode
+            ) {
+              <li>
+                <a [routerLink]="[country.countryCode]"> {{ country.name }} </a>
+              </li>
+            } @empty {
+              <div>Sorry, no countries data.</div>
+            }
+          </ul>
+        </div>
+      }
     </section>
     <section class="random-countries">
       <h2>Random Countries Holidays</h2>
-      @for (holiday of randomCountriesHolidays; track holiday.countryCode) {
-        <app-country-card
-          [countryName]="holiday.countryName"
-          [holidayName]="holiday.name"
-          [holidaydate]="holiday.date"
-          [routePath]="holiday.countryCode"
-        ></app-country-card>
-      } @empty {
-        <div>Sorry, no countries data.</div>
+      @if (isCountriesHolidayLoading) {
+        <app-progress-spiner />
+      } @else {
+        @for (holiday of randomCountriesHolidays; track holiday.countryCode) {
+          <app-country-card
+            [countryName]="holiday.countryName"
+            [holidayName]="holiday.name"
+            [holidaydate]="holiday.date"
+            [routePath]="holiday.countryCode"
+          ></app-country-card>
+        } @empty {
+          <div>Sorry, no countries data.</div>
+        }
       }
     </section>
   </div>
