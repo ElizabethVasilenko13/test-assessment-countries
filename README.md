@@ -10,29 +10,42 @@ The application is built using Angular 18 and Material Design. RxJS was used for
 
 I've created .env file for storing base api url and put it into .gitignore as it usually happens. I don't know if I had to do it in case of test task, but I'd done so. Sorry if it caused any inconvenience. You can find the steps to project start and .env file content below.
 
-### Key App Parts imolemented
+### Features
 
-- **MainPageComponent**
-- **CountryPageComponent**
-- **CountryCardComponent**
-- **FilterPipe**: A custom pipe to filter data based on search terms and filter fileld(key).
-- **Api Url Interceptor**
+- **Country Search**: Allows users to search for countries.
+- **Detail Country Page**: Provides information about country holidays.
+- **Random Countries Holiday**: Displays holiday for randomly chosen countries.
+- **Loading Indicators**: Shows loading spinners during data fetching.
+- **Snackbar Notifications**: Provides feedback to users about the success or failure of operations.
+- **Interceptor**: API URL interceptor for handling API requests.
+
+
+### Architecture
+
+The application is organized into two main parts:
+
+- **Feature Modules**: Contains specific functionalities or features.
+  - **Countries**: Manages country-related operations, including searching and displaying country and holidays.
+- **Shared Modules**: Contains reusable components, services, and utilities.
+  - **Components**: Include UI components like spinner and snackbar.
+  - **Pipes**: Custom pipe for filtering and transforming data.
+  - **Services**: Provides services used across different features, such as snackbar notifications.
 
 ## Installation
 
-1. **Clone the Repository**
+1. **Clone the repository**
 
    ```
    git clone https://github.com/ElizabethVasilenko13/test-assessment-countries.git
    ```
 
-2. **Navigate to the folder(if needed)**
+2. **Navigate to the project directory (if needed)**
 
    ```
    cd test-assessment-countries
    ```
 
-3. **Install Dependencies**
+3. **Install dependencies**
    ```
    npm install
    ```
@@ -44,7 +57,18 @@ I've created .env file for storing base api url and put it into .gitignore as it
    API_BASE_URL=https://api.nager.at/v2/
    ```
 
-5. **Run the Application:**
+5. **Run the application:**
    ```
    ng serve
    ```
+
+6. **Build the application**
+   ```
+   ng build
+   ```
+
+### Screenshots
+![image](https://github.com/user-attachments/assets/66848aa7-0b5b-40a5-85f1-c9dfb520650b)
+
+![image](https://github.com/user-attachments/assets/818225da-592c-4ce4-9991-6f35f893906e)
+
