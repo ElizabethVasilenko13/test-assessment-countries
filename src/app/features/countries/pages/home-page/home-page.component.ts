@@ -6,12 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { CountryCardComponent } from '@features/countries/components/country-card/country-card.component';
 import { CountryNextHolidayProps, CountryShortInfo } from '@features/countries/countries.model';
-import { CountriesApiService } from '@features/countries/services/countries-api.service';
+import { CountriesService } from '@features/countries/services/countries.service';
 import { ProgressSpinerComponent } from '@shared/components/progress-spiner/progress-spiner.component';
 import { FilterByPipe } from '@shared/pipes/filter-by-filed.pipe';
-import { getRandomElements } from '@shared/services/get-rundom-items';
 import { SnackBarService } from '@shared/services/snack-bar.service';
-import { finalize, take } from 'rxjs';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -32,7 +31,7 @@ import { finalize, take } from 'rxjs';
 })
 export class HomePageComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private countryApiService = inject(CountriesApiService);
+  private countriesService = inject(CountriesService);
   protected snackBarService = inject(SnackBarService);
 
   countriesList: CountryShortInfo[] = [];
@@ -40,9 +39,7 @@ export class HomePageComponent implements OnInit {
   countriesForm = this.fb.group({
     country: '',
   });
-
   isCountriesLoading = false;
-  isCountriesHolidayLoading = false;
 
   ngOnInit(): void {
     this.fetchCountries();
@@ -50,58 +47,23 @@ export class HomePageComponent implements OnInit {
 
   fetchCountries(): void {
     this.isCountriesLoading = true;
-    this.isCountriesHolidayLoading = true;
-    this.countryApiService
-      .getCountries()
+
+    this.countriesService
+      .getCountriesAndHolidays()
       .pipe(
-        take(1),
         finalize(() => {
           this.isCountriesLoading = false;
         })
       )
       .subscribe({
         next: data => {
-          this.countriesList = data;
-          this.snackBarService.showSnackbar('Countries loaded successfully!');
-          this.fetchRandomCountriesHolidays(data);
+          this.countriesList = data.countries;
+          this.randomCountriesHolidays = data.holidays;
+          this.snackBarService.showSnackbar('Countries and holidays loaded successfully!');
         },
         error: () => {
-          this.snackBarService.showSnackbar('Failed to load countries.', false);
+          this.snackBarService.showSnackbar('Failed to load data.', false);
         },
       });
-  }
-
-  fetchRandomCountriesHolidays(countriesList: CountryShortInfo[]): void {
-    const rundomCountriesAmount = 3;
-    const randomCountries = getRandomElements(countriesList, rundomCountriesAmount);
-
-    let remainingRequests = randomCountries.length;
-
-    randomCountries.forEach(country => {
-      this.countryApiService
-        .getNextPublicHolidays(country.countryCode)
-        .pipe(take(1))
-        .subscribe({
-          next: holidays => {
-            const nearestNextHoliday = holidays[0];
-            this.randomCountriesHolidays.push({
-              ...nearestNextHoliday,
-              countryName: country.name,
-            });
-          },
-          error: () => {
-            this.snackBarService.showSnackbar(
-              `Failed to load holidays for ${country.name}.`,
-              false
-            );
-          },
-          complete: () => {
-            remainingRequests--;
-            if (remainingRequests === 0) {
-              this.isCountriesHolidayLoading = false;
-            }
-          },
-        });
-    });
   }
 }
