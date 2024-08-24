@@ -59,10 +59,6 @@ export class HomePageComponent implements OnInit {
       });
   }
 
-  trackByCountryCode(index: number, country: CountryShortInfo): string {
-    return country.countryCode;
-  }
-
   fetchRandomCountriesHolidays(countriesList: CountryShortInfo[]): void {
     const rundomCountriesAmount = 3;
     const randomCountries = getRandomElements(countriesList, rundomCountriesAmount);

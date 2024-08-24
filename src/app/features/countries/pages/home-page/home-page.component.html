@@ -10,27 +10,32 @@
       </form>
       <div class="country-list">
         <ul>
-          <li
-            *ngFor="
-              let country of countriesList
-                | filterByPipe: 'name' : countriesForm.get('country')?.value ?? '';
-              trackBy: trackByCountryCode
-            "
-          >
-            <a [routerLink]="[country.countryCode]"> {{ country.name }} </a>
-          </li>
+          @for (
+            country of countriesList
+              | filterByPipe: 'name' : countriesForm.get('country')?.value ?? '';
+            track country.countryCode
+          ) {
+            <li>
+              <a [routerLink]="[country.countryCode]"> {{ country.name }} </a>
+            </li>
+          } @empty {
+            <div>Sorry, no countries data.</div>
+          }
         </ul>
       </div>
     </section>
     <section class="random-countries">
       <h2>Random Countries Holidays</h2>
-      <app-country-card
-        *ngFor="let holiday of randomCountriesHolidays"
-        [countryName]="holiday.countryName"
-        [holidayName]="holiday.name"
-        [holidaydate]="holiday.date"
-        [routePath]="holiday.countryCode"
-      ></app-country-card>
+      @for (holiday of randomCountriesHolidays; track holiday.countryCode) {
+        <app-country-card
+          [countryName]="holiday.countryName"
+          [holidayName]="holiday.name"
+          [holidaydate]="holiday.date"
+          [routePath]="holiday.countryCode"
+        ></app-country-card>
+      } @empty {
+        <div>Sorry, no countries data.</div>
+      }
     </section>
   </div>
 </main>

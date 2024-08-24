@@ -1,27 +1,23 @@
 <main class="country-page">
   <h1>Holidays in {{ countryData?.commonName }} for {{ selectedYear }}</h1>
-
   <div class="year-switcher">
-    <button
-      mat-button
-      *ngFor="let year of availableYears"
-      [class.active]="year === selectedYear"
-      (click)="onYearChange(year)"
-    >
-      {{ year }}
-    </button>
+    @for (year of availableYears; track $index) {
+      <button mat-button [class.active]="year === selectedYear" (click)="onYearChange(year)">
+        {{ year }}
+      </button>
+    }
   </div>
-
-  <div class="holidays-list" *ngIf="countryHolidays.length > 0">
+  <div class="holidays-list">
     <ul>
-      <li *ngFor="let holiday of countryHolidays; trackBy: trackByHoliday">
-        <h3>{{ holiday.name }}</h3>
-        <p>Date: {{ holiday.date | date: 'fullDate' }}</p>
-        <p>Type: {{ holiday.types.join(', ') }}</p>
-      </li>
+      @for (holiday of countryHolidays; track $index) {
+        <li>
+          <h3>{{ holiday.name }}</h3>
+          <p>Date: {{ holiday.date | date: 'fullDate' }}</p>
+          <p>Type: {{ holiday.types.join(', ') }}</p>
+        </li>
+      } @empty {
+        <p>No holidays available for the selected year.</p>
+      }
     </ul>
-  </div>
-  <div *ngIf="countryHolidays.length === 0">
-    <p>No holidays available for the selected year.</p>
   </div>
 </main>
