@@ -53,7 +53,7 @@ The application is organized into two main parts:
    Create a .env file in the root directory of the project to store environment variables
 
    ```
-   API_BASE_URL=https://api.nager.at/v2/
+   NG_APP_API_BASE_URL='https://date.nager.at/api/v3'
    ```
 
 5. **Run the application:**
